@@ -85,3 +85,100 @@
 	-> m_chg_mile numeric(6,2),
 	-> constraint pk_id primary key( mcode )
 	-> ) ;
+
+
+
+
+
+
+
+
+
+SELECT ctr_date, ac_number, ctr_destination, ctr_distance, hrs_flown
+-> FROM charter
+-> WHERE ac_number = '2278V' ;
+
+
+
+
+
+
+CREATE VIEW AC778V
+-> AS
+-> SELECT ctr_date, ac_number, ctr_destination, ctr_distance, hrs_flown
+-> FROM charter
+-> WHERE ac_number = '2278V' ;
+
+
+
+
+
+
+SELECT charter.ctr_date, customer.cphone, charter.ac_number, customer.careacode, charter.ctr_destination, charter.code
+-> FROM charter, customer
+-> WHERE charter.code = customer.code ;
+
+
+
+
+
+SELECT charter.ctr_Date, charter.ac_number, customer.cfname, customer.clname
+-> FROM charter, customer
+-> WHERE charter.code = customer.code AND charter.ac_number = '2278V';
+
+
+
+
+
+
+SELECT clname, cfname, cbalance
+-> FROM customer
+-> WHERE cbalance > 0 GROUP BY cbalance DESC ;
+
+
+
+
+
+SELECT AVG(cbalance) as avg_bal, MIN(cbalance) as min_bal, MAX(cbalance) as max_bal, SUM(cbalance) as total_bal
+-> FROM customer ;
+
+
+
+
+
+
+SELECT ac_number, COUNT(ac_number) as num_of_trips, SUM(ctr_distance) as total_distance, AVG(ctr_distance) as avg_distance,
+-> SUM(hrs_flown) as total_hrs, AVG(hrs_flown) as avg_hrs
+-> FROM charter
+-> GROUP BY ac_number ;
+
+
+
+
+
+SELECT charter.ctr_Date, charter.ac_number, employee.initial as mname, charter.ctr_pilot, employee.lname, charter.hrs_flown
+-> FROM charter, employee
+-> WHERE charter.ctr_pilot = employee.enum
+-> AND charter.ctr_pilot = '' ;
+
+
+
+
+
+UPDATE aircraft SET aircraft.ac_ttaf = sum_hrs.sum_flown
+-> AND aircraft.ac_ttel = sum_hrs.sum_total
+-> WHERE aircraft.ac_number = sum_hrs.ac_number ;
+
+
+
+CREATE TRIGGER trg_ctr_hrs
+-> AFTER INSERT ON aircraft
+-> REFERENCING NEW ROW AS nrow
+-> for each row
+-> begin
+-> UPDATE aircraft SET aircraft.ac_ttaf = sum_hrs.sum_flown
+-> AND aircraft.ac_ttel = sum_hrs.sum_total
+-> WHERE aircraft.ac_number = sum_hrs.ac_number ;
+-> end ;
+
+
